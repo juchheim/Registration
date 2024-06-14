@@ -169,3 +169,91 @@ IPN Data: Array
 )
 
 IPN Verification Failed
+IPN Handler Triggered at 2024-06-14 19:45:16
+IPN Data: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+IPN Verification Failed
+IPN Handler Triggered at 2024-06-14 19:47:17
+IPN Data: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+IPN Verification Failed
+IPN Handler Triggered at 2024-06-14 19:49:18
+IPN Data: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+IPN Verification Failed
+IPN Handler Triggered at 2024-06-14 19:50:19
+IPN Data: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+IPN Verification Failed
+IPN Handler Triggered at 2024-06-14 19:52:20
+IPN Data: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+IPN Verification Failed
+IPN Handler Triggered at 2024-06-14 19:54:21
+IPN Data: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+IPN Verification Failed
+IPN Handler Triggered at 2024-06-14 19:56:22
+IPN Data: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+IPN Verification Failed
+IPN Handler Triggered at 2024-06-14 19:58:23
+IPN Data: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+IPN Verification Failed

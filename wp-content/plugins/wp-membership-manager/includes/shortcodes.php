@@ -70,3 +70,12 @@ function wpmm_login_form() {
     }
 }
 add_shortcode('wpmm_login_form', 'wpmm_login_form');
+
+
+// Shortcode to trigger the webhook test
+function wpmm_webhook_test_shortcode() {
+    ob_start();
+    require_once WPMM_PLUGIN_DIR . 'includes/webhook-test.php';
+    return ob_get_clean();
+}
+add_shortcode('wpmm_webhook_test', 'wpmm_webhook_test_shortcode');
