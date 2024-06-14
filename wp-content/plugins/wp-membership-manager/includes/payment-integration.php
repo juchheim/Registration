@@ -124,6 +124,8 @@ function wpmm_handle_paypal_webhook() {
         error_log("Failed to open log file at $log_file_path");
     }
 
+    file_put_contents($log_file_path, "Request method: " . $_SERVER['REQUEST_METHOD'] . "\n", FILE_APPEND);
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         file_put_contents($log_file_path, "Request Method is not POST\n", FILE_APPEND);
         return;
@@ -135,20 +137,19 @@ function wpmm_handle_paypal_webhook() {
         return;
     }
 
+    file_put_contents($log_file_path, "Raw POST data: " . $raw_post_data . "\n", FILE_APPEND);
+
     $post_data = json_decode($raw_post_data, true);
     if (json_last_error() !== JSON_ERROR_NONE) {
         file_put_contents($log_file_path, "JSON decode error: " . json_last_error_msg() . "\n", FILE_APPEND);
         return;
     }
 
-    // Log the received webhook data
-    file_put_contents($log_file_path, "Webhook Data: " . print_r($post_data, true) . "\n", FILE_APPEND);
+    file_put_contents($log_file_path, "Decoded POST data: " . print_r($post_data, true) . "\n", FILE_APPEND);
 
     if (isset($post_data['event_type']) && $post_data['event_type'] === 'PAYMENT.SALE.COMPLETED') {
         $resource = $post_data['resource'];
-
-        // Log the resource data
-        file_put_contents($log_file_path, "Resource Data: " . print_r($resource, true) . "\n", FILE_APPEND);
+        file_put_contents($log_file_path, "Resource data: " . print_r($resource, true) . "\n", FILE_APPEND);
 
         if (isset($resource['custom'])) {
             $custom = json_decode($resource['custom'], true);
