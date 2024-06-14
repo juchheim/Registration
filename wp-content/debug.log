@@ -228,3 +228,141 @@
 )
 
 [14-Jun-2024 16:19:57 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:21:37 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => true
+)
+
+[14-Jun-2024 19:21:37 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:21:37 UTC] PayPal IPN received: Array
+(
+)
+
+[14-Jun-2024 19:21:38 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:23:37 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+[14-Jun-2024 19:23:38 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:25:38 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+[14-Jun-2024 19:25:39 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:27:17 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => true
+)
+
+[14-Jun-2024 19:27:17 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:28:19 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+[14-Jun-2024 19:28:20 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:30:20 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+[14-Jun-2024 19:30:21 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:32:21 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+[14-Jun-2024 19:32:22 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:34:22 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+[14-Jun-2024 19:34:23 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:36:23 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+[14-Jun-2024 19:36:24 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:38:24 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+[14-Jun-2024 19:38:25 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:40:24 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+[14-Jun-2024 19:40:25 UTC] PayPal IPN verification failed.
+[14-Jun-2024 19:41:28 UTC] PHP Parse error:  syntax error, unexpected token "<", expecting end of file in /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/payment-integration.php on line 115
+[14-Jun-2024 19:41:36 UTC] PHP Parse error:  syntax error, unexpected token "<", expecting end of file in /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/payment-integration.php on line 115
+[14-Jun-2024 19:41:36 UTC] PHP Notice:  Function is_embed was called incorrectly. Conditional query tags do not work before the query is run. Before then, they always return false. Please see <a>Debugging in WordPress</a> for more information. (This message was added in version 3.1.0.) in /Users/ejuchheim/Local Sites/membership/app/public/wp-includes/functions.php on line 6078
+[14-Jun-2024 19:41:36 UTC] PHP Notice:  Function is_search was called incorrectly. Conditional query tags do not work before the query is run. Before then, they always return false. Please see <a>Debugging in WordPress</a> for more information. (This message was added in version 3.1.0.) in /Users/ejuchheim/Local Sites/membership/app/public/wp-includes/functions.php on line 6078
+[14-Jun-2024 19:41:36 UTC] PHP Parse error:  syntax error, unexpected token "<", expecting end of file in /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/payment-integration.php on line 115
+[14-Jun-2024 19:41:36 UTC] PHP Notice:  Function is_embed was called incorrectly. Conditional query tags do not work before the query is run. Before then, they always return false. Please see <a>Debugging in WordPress</a> for more information. (This message was added in version 3.1.0.) in /Users/ejuchheim/Local Sites/membership/app/public/wp-includes/functions.php on line 6078
+[14-Jun-2024 19:41:36 UTC] PHP Notice:  Function is_search was called incorrectly. Conditional query tags do not work before the query is run. Before then, they always return false. Please see <a>Debugging in WordPress</a> for more information. (This message was added in version 3.1.0.) in /Users/ejuchheim/Local Sites/membership/app/public/wp-includes/functions.php on line 6078
+[14-Jun-2024 19:41:55 UTC] PHP Parse error:  syntax error, unexpected token "<", expecting end of file in /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/payment-integration.php on line 115
+[14-Jun-2024 19:41:55 UTC] PHP Notice:  Function is_embed was called incorrectly. Conditional query tags do not work before the query is run. Before then, they always return false. Please see <a>Debugging in WordPress</a> for more information. (This message was added in version 3.1.0.) in /Users/ejuchheim/Local Sites/membership/app/public/wp-includes/functions.php on line 6078
+[14-Jun-2024 19:41:55 UTC] PHP Notice:  Function is_search was called incorrectly. Conditional query tags do not work before the query is run. Before then, they always return false. Please see <a>Debugging in WordPress</a> for more information. (This message was added in version 3.1.0.) in /Users/ejuchheim/Local Sites/membership/app/public/wp-includes/functions.php on line 6078
+[14-Jun-2024 19:41:55 UTC] PHP Parse error:  syntax error, unexpected token "<", expecting end of file in /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/payment-integration.php on line 115
+[14-Jun-2024 19:41:55 UTC] PHP Notice:  Function is_embed was called incorrectly. Conditional query tags do not work before the query is run. Before then, they always return false. Please see <a>Debugging in WordPress</a> for more information. (This message was added in version 3.1.0.) in /Users/ejuchheim/Local Sites/membership/app/public/wp-includes/functions.php on line 6078
+[14-Jun-2024 19:41:55 UTC] PHP Notice:  Function is_search was called incorrectly. Conditional query tags do not work before the query is run. Before then, they always return false. Please see <a>Debugging in WordPress</a> for more information. (This message was added in version 3.1.0.) in /Users/ejuchheim/Local Sites/membership/app/public/wp-includes/functions.php on line 6078
+[14-Jun-2024 19:43:15 UTC] PayPal IPN received: Array
+(
+    [interval] => 60
+    [_nonce] => c1fac0500c
+    [action] => heartbeat
+    [screen_id] => users
+    [has_focus] => false
+)
+
+[14-Jun-2024 19:43:16 UTC] PayPal IPN verification failed.

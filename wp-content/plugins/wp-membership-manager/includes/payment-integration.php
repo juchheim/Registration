@@ -112,61 +112,69 @@ function wpmm_handle_paypal_ipn() {
 add_action('wp_loaded', 'wpmm_handle_paypal_ipn');
 
 
+
 // Webhook handler for PayPal
 function wpmm_handle_paypal_webhook() {
-    // Only handle POST requests
+    // Output debug message directly to the browser
+    echo "Webhook Handler Triggered";
+
+    // Log to a custom file to ensure the handler is being called
+    $log_file_path = __DIR__ . '/webhook_log.txt';
+    $log_file = fopen($log_file_path, 'a');
+    if ($log_file) {
+        fwrite($log_file, "Webhook Handler Triggered at " . date('Y-m-d H:i:s') . "\n");
+        fclose($log_file);
+    } else {
+        echo "Failed to open log file at $log_file_path";
+    }
+
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        file_put_contents($log_file_path, "Request Method is not POST\n", FILE_APPEND);
         return;
     }
 
-    // Read raw POST data
     $raw_post_data = file_get_contents('php://input');
     $post_data = json_decode($raw_post_data, true);
 
     // Log the received webhook data
-    error_log('PayPal Webhook received: ' . print_r($post_data, true));
-    file_put_contents(__DIR__ . '/webhook_log.txt', "Webhook Data: " . print_r($post_data, true) . "\n", FILE_APPEND);
+    file_put_contents($log_file_path, "Webhook Data: " . print_r($post_data, true) . "\n", FILE_APPEND);
 
-    // Verify if the event type is PAYMENT.SALE.COMPLETED
     if (isset($post_data['event_type']) && $post_data['event_type'] === 'PAYMENT.SALE.COMPLETED') {
         $resource = $post_data['resource'];
 
         // Log the resource data
-        file_put_contents(__DIR__ . '/webhook_log.txt', "Resource Data: " . print_r($resource, true) . "\n", FILE_APPEND);
+        file_put_contents($log_file_path, "Resource Data: " . print_r($resource, true) . "\n", FILE_APPEND);
 
-        // Extract custom data from resource
-        $custom = json_decode($resource['custom'], true);
-        $username = sanitize_text_field($custom['username']);
-        $email = sanitize_email($custom['email']);
-        $password = sanitize_text_field($custom['password']);
-        $membership_plan = intval($custom['membership_plan']);
+        if (isset($resource['custom'])) {
+            $custom = json_decode($resource['custom'], true);
+            $username = sanitize_text_field($custom['username']);
+            $email = sanitize_email($custom['email']);
+            $password = sanitize_text_field($custom['password']);
+            $membership_plan = intval($custom['membership_plan']);
 
-        error_log("Creating user with username: $username, email: $email, membership_plan: $membership_plan");
-        file_put_contents(__DIR__ . '/webhook_log.txt', "Creating user with username: $username, email: $email, membership_plan: $membership_plan\n", FILE_APPEND);
+            file_put_contents($log_file_path, "Creating user with username: $username, email: $email, membership_plan: $membership_plan\n", FILE_APPEND);
 
-        // Create a new user
-        $user_id = wp_create_user($username, $password, $email);
+            // Create a new user
+            $user_id = wp_create_user($username, $password, $email);
 
-        if (is_wp_error($user_id)) {
-            error_log('Failed to create user: ' . $user_id->get_error_message());
-            file_put_contents(__DIR__ . '/webhook_log.txt', "Failed to create user: " . $user_id->get_error_message() . "\n", FILE_APPEND);
-            return;
+            if (is_wp_error($user_id)) {
+                file_put_contents($log_file_path, "Failed to create user: " . $user_id->get_error_message() . "\n", FILE_APPEND);
+                return;
+            }
+
+            // Assign the selected membership plan role to the new user
+            $plan = get_post($membership_plan);
+            $role = strtolower(str_replace(' ', '_', $plan->post_title)) . '_member';
+            $user = new WP_User($user_id);
+            $user->set_role($role);
+
+            file_put_contents($log_file_path, "User created with ID: $user_id and assigned role: $role\n", FILE_APPEND);
+        } else {
+            file_put_contents($log_file_path, "Custom data missing in resource\n", FILE_APPEND);
         }
-
-        // Assign the selected membership plan role to the new user
-        $plan = get_post($membership_plan);
-        $role = strtolower(str_replace(' ', '_', $plan->post_title)) . '_member';
-        $user = new WP_User($user_id);
-        $user->set_role($role);
-
-        error_log("User created with ID: $user_id and assigned role: $role");
-        file_put_contents(__DIR__ . '/webhook_log.txt', "User created with ID: $user_id and assigned role: $role\n", FILE_APPEND);
     } else {
-        error_log('PayPal Webhook verification failed.');
-        file_put_contents(__DIR__ . '/webhook_log.txt', "Webhook Verification Failed\n", FILE_APPEND);
+        file_put_contents($log_file_path, "Webhook verification failed\n", FILE_APPEND);
     }
 }
-
-// Register webhook handler for admin-post
 add_action('admin_post_nopriv_handle_paypal_webhook', 'wpmm_handle_paypal_webhook');
 add_action('admin_post_handle_paypal_webhook', 'wpmm_handle_paypal_webhook');
