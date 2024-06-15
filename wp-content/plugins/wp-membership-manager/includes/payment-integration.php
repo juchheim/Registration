@@ -1,120 +1,48 @@
 <?php
 
-// Process PayPal Payment
-function wpmm_process_paypal_payment($username, $email, $password, $membership_plan) {
-    // Sandbox or live URL
-    $paypal_url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+// Include Stripe PHP library files manually
+require_once __DIR__ . '/../stripe/init.php';
+require_once __DIR__ . '/../stripe/lib/Stripe.php';
+require_once __DIR__ . '/../stripe/lib/ApiRequestor.php';
+require_once __DIR__ . '/../stripe/lib/ApiResource.php';
+require_once __DIR__ . '/../stripe/lib/StripeObject.php';
+require_once __DIR__ . '/../stripe/lib/Collection.php';
+require_once __DIR__ . '/../stripe/lib/ApiResponse.php';
+require_once __DIR__ . '/../stripe/lib/HttpClient/ClientInterface.php';
+require_once __DIR__ . '/../stripe/lib/HttpClient/CurlClient.php';
 
-    $return_url = home_url('/thank-you');
-    $cancel_url = home_url('/cancel');
-    $notify_url = home_url('/ipn'); // Instant Payment Notification
+// Replace 'your-stripe-secret-key' with your actual Stripe secret key
+\Stripe\Stripe::setApiKey('sk_test_51PRj4aHrZfxkHCcnjYNK7r3Ev1e1sIlU4R3itbutVSG1fJKAzfEOehjvFZz7B9A8v5Hu0fF0Dh9sv5ZYmbrd9swh00VLTD1J2Q');
 
-    $plan = get_post($membership_plan);
-    $amount = 10.00; // Assume a fixed price for now
+function wpmm_process_stripe_payment($custom_data) {
+    $custom_data_json = json_encode($custom_data);
 
-    $query_args = array(
-        'cmd' => '_xclick',
-        'business' => 'sb-e8ba131205897@business.example.com',
-        'item_name' => $plan->post_title,
-        'amount' => $amount,
-        'currency_code' => 'USD',
-        'return' => $return_url,
-        'cancel_return' => $cancel_url,
-        'notify_url' => $notify_url,
-        'custom' => json_encode(array('username' => $username, 'email' => $email, 'password' => $password, 'membership_plan' => $membership_plan)) // Custom field to pass user details
-    );
+    // Create a new Stripe Checkout session
+    $session = \Stripe\Checkout\Session::create([
+        'payment_method_types' => ['card'],
+        'line_items' => [[
+            'price_data' => [
+                'currency' => 'usd',
+                'product_data' => [
+                    'name' => 'Membership Plan',
+                ],
+                'unit_amount' => 1000, // $10.00
+            ],
+            'quantity' => 1,
+        ]],
+        'mode' => 'payment',
+        'success_url' => home_url('/thank-you') . '?session_id={CHECKOUT_SESSION_ID}',
+        'cancel_url' => home_url('/cancel'),
+        'metadata' => ['custom_data' => $custom_data_json],
+    ]);
 
-    $paypal_url = add_query_arg($query_args, $paypal_url);
-
-    // Redirect to PayPal
-    wp_redirect($paypal_url);
-    exit;
+    // Return session ID for Stripe Checkout redirect
+    echo json_encode(['sessionId' => $session->id]);
+    wp_die();
 }
 
-// PayPal IPN handler
-function wpmm_handle_paypal_ipn() {
-    // Log to a custom file to ensure the handler is being called
-    $log_file = fopen(__DIR__ . '/ipn_log.txt', 'a');
-    fwrite($log_file, "IPN Handler Triggered at " . date('Y-m-d H:i:s') . "\n");
-    fclose($log_file);
-
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        return;
-    }
-
-    $raw_post_data = file_get_contents('php://input');
-    $raw_post_array = explode('&', $raw_post_data);
-    $post_data = array();
-    foreach ($raw_post_array as $keyval) {
-        $keyval = explode('=', $keyval);
-        if (count($keyval) == 2) {
-            $post_data[$keyval[0]] = urldecode($keyval[1]);
-        }
-    }
-
-    // Log the received IPN data
-    error_log('PayPal IPN received: ' . print_r($post_data, true));
-    file_put_contents(__DIR__ . '/ipn_log.txt', "IPN Data: " . print_r($post_data, true) . "\n", FILE_APPEND);
-
-    // Validate IPN with PayPal
-    $paypal_url = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
-    $response = wp_remote_post($paypal_url, array(
-        'method' => 'POST',
-        'body' => array_merge(array('cmd' => '_notify-validate'), $post_data),
-        'timeout' => 45,
-        'httpversion' => '1.1',
-        'blocking' => true,
-        'headers' => array(),
-    ));
-
-    if (is_wp_error($response)) {
-        error_log('PayPal IPN validation request failed: ' . $response->get_error_message());
-        file_put_contents(__DIR__ . '/ipn_log.txt', "IPN validation request failed: " . $response->get_error_message() . "\n", FILE_APPEND);
-        return;
-    }
-
-    if (wp_remote_retrieve_body($response) === 'VERIFIED') {
-        // Payment verified
-        error_log('PayPal IPN verified.');
-        file_put_contents(__DIR__ . '/ipn_log.txt', "IPN Verified\n", FILE_APPEND);
-
-        $custom = json_decode($post_data['custom'], true);
-        $username = sanitize_text_field($custom['username']);
-        $email = sanitize_email($custom['email']);
-        $password = sanitize_text_field($custom['password']);
-        $membership_plan = intval($custom['membership_plan']);
-
-        error_log("Creating user with username: $username, email: $email, membership_plan: $membership_plan");
-        file_put_contents(__DIR__ . '/ipn_log.txt', "Creating user with username: $username, email: $email, membership_plan: $membership_plan\n", FILE_APPEND);
-
-        // Create a new user
-        $user_id = wp_create_user($username, $password, $email);
-
-        if (is_wp_error($user_id)) {
-            error_log('Failed to create user: ' . $user_id->get_error_message());
-            file_put_contents(__DIR__ . '/ipn_log.txt', "Failed to create user: " . $user_id->get_error_message() . "\n", FILE_APPEND);
-            return;
-        }
-
-        // Assign the selected membership plan role to the new user
-        $plan = get_post($membership_plan);
-        $role = strtolower(str_replace(' ', '_', $plan->post_title)) . '_member';
-        $user = new WP_User($user_id);
-        $user->set_role($role);
-
-        error_log("User created with ID: $user_id and assigned role: $role");
-        file_put_contents(__DIR__ . '/ipn_log.txt', "User created with ID: $user_id and assigned role: $role\n", FILE_APPEND);
-    } else {
-        error_log('PayPal IPN verification failed.');
-        file_put_contents(__DIR__ . '/ipn_log.txt', "IPN Verification Failed\n", FILE_APPEND);
-    }
-}
-add_action('wp_loaded', 'wpmm_handle_paypal_ipn');
-
-
-
-// Webhook handler for PayPal
-function wpmm_handle_paypal_webhook() {
+// Webhook handler for Stripe
+function wpmm_handle_stripe_webhook(WP_REST_Request $request) {
     $log_file_path = __DIR__ . '/webhook_log.txt';
     $log_file = fopen($log_file_path, 'a');
     if ($log_file) {
@@ -124,73 +52,62 @@ function wpmm_handle_paypal_webhook() {
         error_log("Failed to open log file at $log_file_path");
     }
 
-    file_put_contents($log_file_path, "Request method: " . $_SERVER['REQUEST_METHOD'] . "\n", FILE_APPEND);
+    $endpoint_secret = 'whsec_kNP7kmke4yorjL837t5vybbFzFjyxXSx';
+    $payload = @file_get_contents('php://input');
+    $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+    $event = null;
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        file_put_contents($log_file_path, "Request Method is not POST\n", FILE_APPEND);
-        return;
+    try {
+        $event = \Stripe\Webhook::constructEvent($payload, $sig_header, $endpoint_secret);
+    } catch (\UnexpectedValueException $e) {
+        file_put_contents($log_file_path, "Invalid payload\n", FILE_APPEND);
+        http_response_code(400);
+        exit();
+    } catch (\Stripe\Exception\SignatureVerificationException $e) {
+        file_put_contents($log_file_path, "Invalid signature\n", FILE_APPEND);
+        http_response_code(400);
+        exit();
     }
 
-    $raw_post_data = file_get_contents('php://input');
-    if ($raw_post_data === false) {
-        file_put_contents($log_file_path, "Failed to get raw post data\n", FILE_APPEND);
-        return;
-    }
+    if ($event->type == 'checkout.session.completed') {
+        $session = $event->data->object;
+        $custom_data = json_decode($session->metadata->custom_data, true);
 
-    file_put_contents($log_file_path, "Raw POST data: " . $raw_post_data . "\n", FILE_APPEND);
+        $username = sanitize_text_field($custom_data['username']);
+        $email = sanitize_email($custom_data['email']);
+        $password = sanitize_text_field($custom_data['password']);
+        $membership_plan = intval($custom_data['membership_plan']);
 
-    $post_data = json_decode($raw_post_data, true);
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        file_put_contents($log_file_path, "JSON decode error: " . json_last_error_msg() . "\n", FILE_APPEND);
-        return;
-    }
+        // Create a new user
+        $user_id = wp_create_user($username, $password, $email);
 
-    file_put_contents($log_file_path, "Decoded POST data: " . print_r($post_data, true) . "\n", FILE_APPEND);
-
-    if (isset($post_data['event_type']) && $post_data['event_type'] === 'PAYMENT.SALE.COMPLETED') {
-        $resource = $post_data['resource'];
-        file_put_contents($log_file_path, "Resource data: " . print_r($resource, true) . "\n", FILE_APPEND);
-
-        if (isset($resource['custom'])) {
-            $custom = json_decode($resource['custom'], true);
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                file_put_contents($log_file_path, "Custom JSON decode error: " . json_last_error_msg() . "\n", FILE_APPEND);
-                return;
-            }
-
-            $username = sanitize_text_field($custom['username']);
-            $email = sanitize_email($custom['email']);
-            $password = sanitize_text_field($custom['password']);
-            $membership_plan = intval($custom['membership_plan']);
-
-            file_put_contents($log_file_path, "Creating user with username: $username, email: $email, membership_plan: $membership_plan\n", FILE_APPEND);
-
-            // Create a new user
-            $user_id = wp_create_user($username, $password, $email);
-
-            if (is_wp_error($user_id)) {
-                file_put_contents($log_file_path, "Failed to create user: " . $user_id->get_error_message() . "\n", FILE_APPEND);
-                return;
-            }
-
-            // Assign the selected membership plan role to the new user
-            $plan = get_post($membership_plan);
-            if (!$plan) {
-                file_put_contents($log_file_path, "Failed to get membership plan\n", FILE_APPEND);
-                return;
-            }
-
-            $role = strtolower(str_replace(' ', '_', $plan->post_title)) . '_member';
-            $user = new WP_User($user_id);
-            $user->set_role($role);
-
-            file_put_contents($log_file_path, "User created with ID: $user_id and assigned role: $role\n", FILE_APPEND);
-        } else {
-            file_put_contents($log_file_path, "Custom data missing in resource\n", FILE_APPEND);
+        if (is_wp_error($user_id)) {
+            file_put_contents($log_file_path, "Failed to create user: " . $user_id->get_error_message() . "\n", FILE_APPEND);
+            return;
         }
-    } else {
-        file_put_contents($log_file_path, "Webhook verification failed\n", FILE_APPEND);
+
+        // Assign the selected membership plan role to the new user
+        $plan = get_post($membership_plan);
+        if (!$plan) {
+            file_put_contents($log_file_path, "Failed to get membership plan\n", FILE_APPEND);
+            return;
+        }
+
+        $role = strtolower(str_replace(' ', '_', $plan->post_title)) . '_member';
+        $user = new WP_User($user_id);
+        $user->set_role($role);
+
+        file_put_contents($log_file_path, "User created with ID: $user_id and assigned role: $role\n", FILE_APPEND);
     }
+
+    http_response_code(200);
+    return new WP_REST_Response('Webhook received', 200);
 }
-add_action('admin_post_nopriv_handle_paypal_webhook', 'wpmm_handle_paypal_webhook');
-add_action('admin_post_handle_paypal_webhook', 'wpmm_handle_paypal_webhook');
+
+add_action('rest_api_init', function () {
+    error_log("Registering REST API route"); // Debugging line
+    register_rest_route('wpmm/v1', '/stripe-webhook', array(
+        'methods' => 'POST',
+        'callback' => 'wpmm_handle_stripe_webhook',
+    ));
+});

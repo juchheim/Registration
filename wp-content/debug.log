@@ -446,3 +446,26 @@
 )
 
 [14-Jun-2024 19:58:24 UTC] PayPal IPN verification failed.
+[15-Jun-2024 12:45:19 UTC] PHP Warning:  require_once(/Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/../stripe/init.php): Failed to open stream: No such file or directory in /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/payment-integration.php on line 4
+[15-Jun-2024 12:45:19 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/../stripe/init.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/payment-integration.php:4
+Stack trace:
+#0 /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/wp-membership-manager.php(22): require_once()
+#1 /Users/ejuchheim/Local Sites/membership/app/public/wp-settings.php(517): include_once('/Users/ejuchhei...')
+#2 /Users/ejuchheim/Local Sites/membership/app/public/wp-config.php(106): require_once('/Users/ejuchhei...')
+#3 /Users/ejuchheim/Local Sites/membership/app/public/wp-load.php(50): require_once('/Users/ejuchhei...')
+#4 /Users/ejuchheim/Local Sites/membership/app/public/wp-admin/admin-ajax.php(22): require_once('/Users/ejuchhei...')
+#5 {main}
+  thrown in /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/payment-integration.php on line 4
+[15-Jun-2024 12:45:21 UTC] PHP Warning:  require_once(/Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/../stripe/init.php): Failed to open stream: No such file or directory in /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/payment-integration.php on line 4
+[15-Jun-2024 12:45:21 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/../stripe/init.php' (include_path='.:/usr/share/php:/www/wp-content/pear') in /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/payment-integration.php:4
+Stack trace:
+#0 /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/wp-membership-manager.php(22): require_once()
+#1 /Users/ejuchheim/Local Sites/membership/app/public/wp-settings.php(517): include_once('/Users/ejuchhei...')
+#2 /Users/ejuchheim/Local Sites/membership/app/public/wp-config.php(106): require_once('/Users/ejuchhei...')
+#3 /Users/ejuchheim/Local Sites/membership/app/public/wp-load.php(50): require_once('/Users/ejuchhei...')
+#4 /Users/ejuchheim/Local Sites/membership/app/public/wp-admin/admin.php(34): require_once('/Users/ejuchhei...')
+#5 /Users/ejuchheim/Local Sites/membership/app/public/wp-admin/edit.php(10): require_once('/Users/ejuchhei...')
+#6 {main}
+  thrown in /Users/ejuchheim/Local Sites/membership/app/public/wp-content/plugins/wp-membership-manager/includes/payment-integration.php on line 4
+[15-Jun-2024 12:45:21 UTC] PHP Notice:  Function is_embed was called incorrectly. Conditional query tags do not work before the query is run. Before then, they always return false. Please see <a>Debugging in WordPress</a> for more information. (This message was added in version 3.1.0.) in /Users/ejuchheim/Local Sites/membership/app/public/wp-includes/functions.php on line 6078
+[15-Jun-2024 12:45:21 UTC] PHP Notice:  Function is_search was called incorrectly. Conditional query tags do not work before the query is run. Before then, they always return false. Please see <a>Debugging in WordPress</a> for more information. (This message was added in version 3.1.0.) in /Users/ejuchheim/Local Sites/membership/app/public/wp-includes/functions.php on line 6078
