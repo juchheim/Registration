@@ -1,112 +1,74 @@
-/* General Form Styles */
-form {
-    max-width: 500px;
+/* wpmm-style.css */
+
+/* Basic styling for the forms */
+.wpmm-registration-form, .wpmm-login-form {
+    max-width: 400px;
     margin: 0 auto;
     padding: 20px;
-    background: #f9f9f9;
     border: 1px solid #ddd;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box; /* Ensure padding is included in the width */
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Form Field Styles */
-form label {
+.wpmm-registration-form h2, .wpmm-login-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.wpmm-registration-form label, .wpmm-login-form label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     font-weight: bold;
     color: #333;
 }
 
-form input[type="text"],
-form input[type="email"],
-form input[type="password"],
-form select {
-    width: 100%; /* Ensure full width */
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    font-size: 16px;
-    color: #333;
-    box-sizing: border-box; /* Ensure padding is included in the width */
-}
-
-form button[type="submit"], .wpmm-button {
+.wpmm-registration-form input[type="text"], .wpmm-registration-form input[type="email"], .wpmm-registration-form input[type="password"],
+.wpmm-login-form input[type="text"], .wpmm-login-form input[type="password"] {
     width: 100%;
     padding: 10px;
-    background: #0073aa;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
-
-form button[type="submit"]:hover, .wpmm-button:hover {
-    background: #005177;
-}
-
-/* PayPal Button Container */
-#paypal-button-container {
-    margin-top: 15px;
-}
-
-/* Form Container Styles */
-form .form-container {
-    margin-bottom: 20px;
-}
-
-/* Error Message Styles */
-form .error {
-    color: red;
-    font-size: 14px;
     margin-bottom: 15px;
-}
-
-/* Success Message Styles */
-form .success {
-    color: green;
-    font-size: 14px;
-    margin-bottom: 15px;
-}
-
-/* Page Layout */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
 }
 
-h1, h2 {
-    text-align: center;
-    color: #0073aa;
-}
-
-input[type="submit" i] {
+.wpmm-registration-form select, .wpmm-login-form select {
     width: 100%;
     padding: 10px;
-    background: #0073aa;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s ease;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
-input[type="submit" i]:hover {
-    background: #005177;
+.wpmm-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #0073aa;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+}
+
+.wpmm-button:hover {
+    background-color: #005077;
+}
+
+.wpmm-registration-form .wpmm-error, .wpmm-login-form .wpmm-error {
+    color: #d00;
+    background-color: #fee;
+    padding: 10px;
+    border: 1px solid #d00;
+    border-radius: 5px;
+    margin-bottom: 15px;
 }

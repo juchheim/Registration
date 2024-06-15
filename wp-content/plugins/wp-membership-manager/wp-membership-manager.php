@@ -21,6 +21,14 @@ require_once WPMM_PLUGIN_DIR . 'includes/shortcodes.php';
 require_once WPMM_PLUGIN_DIR . 'includes/content-restriction.php';
 require_once WPMM_PLUGIN_DIR . 'includes/payment-integration.php';
 
+// Enqueue scripts and styles
+function wpmm_enqueue_scripts() {
+    wp_enqueue_style('wpmm-style', plugins_url('assets/css/wpmm-style.css', __FILE__));
+    wp_enqueue_script('wpmm-script', plugins_url('assets/js/wpmm-script.js', __FILE__), array('jquery'), false, true);
+    wp_enqueue_script('stripe-js', 'https://js.stripe.com/v3/');
+}
+add_action('wp_enqueue_scripts', 'wpmm_enqueue_scripts');
+
 // Custom redirect after login
 function wpmm_login_redirect($redirect_to, $request, $user) {
     // Check if the user is a valid WP_User and not an error

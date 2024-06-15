@@ -1,41 +1,35 @@
 <?php
 
-// Enqueue scripts and styles
-function wpmm_enqueue_scripts() {
-    wp_enqueue_style('wpmm-style', plugins_url('assets/css/wpmm-style.css', __FILE__));
-    wp_enqueue_script('wpmm-script', plugins_url('assets/js/wpmm-script.js', __FILE__), array('jquery'), false, true);
-    wp_enqueue_script('stripe-js', 'https://js.stripe.com/v3/');
-}
-add_action('wp_enqueue_scripts', 'wpmm_enqueue_scripts');
-
 // Registration Form Shortcode
 function wpmm_registration_form() {
     // Replace 'your-stripe-publishable-key' with your actual Stripe publishable key
     $stripe_publishable_key = 'pk_test_51PRj4aHrZfxkHCcnhKjEkTIKhaASMGZaE6iDQfHE4MaxcC1xvqfafGBBXEFYOO1AC0In0YwGJbDa4yFeM3DckrGQ00onFkBwh5';
     ob_start();
     ?>
-    <form method="post" id="wpmm-registration-form">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        
-        <label for="membership_plan">Membership Plan:</label>
-        <select id="membership_plan" name="membership_plan" required>
-            <?php
-            $plans = get_posts(array('post_type' => 'membership_plan', 'posts_per_page' => -1));
-            foreach ($plans as $plan) {
-                echo '<option value="' . esc_attr($plan->ID) . '">' . esc_html($plan->post_title) . '</option>';
-            }
-            ?>
-        </select>
-
-        <button type="button" id="stripe-pay-button" class="wpmm-button">Pay with Stripe</button>
-    </form>
+    <div class="wpmm-registration-form">
+        <form method="post" id="wpmm-registration-form">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            
+            <label for="membership_plan">Membership Plan:</label>
+            <select id="membership_plan" name="membership_plan" required>
+                <?php
+                $plans = get_posts(array('post_type' => 'membership_plan', 'posts_per_page' => -1));
+                foreach ($plans as $plan) {
+                    echo '<option value="' . esc_attr($plan->ID) . '">' . esc_html($plan->post_title) . '</option>';
+                }
+                ?>
+            </select>
+            <button type="button" id="stripe-pay-button" class="wpmm-button">Pay with Stripe</button>
+        </form>
+        <div id="wpmm-error-message" class="wpmm-error" style="display: none;"></div>
+    </div>
 
     <script>
         document.getElementById('stripe-pay-button').addEventListener('click', function() {
@@ -51,7 +45,9 @@ function wpmm_registration_form() {
                         var stripe = Stripe('<?php echo $stripe_publishable_key; ?>');
                         stripe.redirectToCheckout({ sessionId: response.sessionId });
                     } else {
-                        alert('Payment failed. Please try again.');
+                        var errorMessage = document.getElementById('wpmm-error-message');
+                        errorMessage.style.display = 'block';
+                        errorMessage.textContent = response.error || 'Payment failed. Please try again.';
                     }
                 }
             };
@@ -101,19 +97,21 @@ function wpmm_login_form() {
         ob_start();
         ?>
         <div class="wpmm-login-form">
-            <?php
-            wp_login_form(array(
-                'redirect' => home_url(), // Redirect to the homepage or any accessible page after login
-                'label_log_in' => __('Login', 'textdomain'),
-                'form_id' => 'wpmm-login-form',
-                'id_submit' => 'wpmm-login-submit',
-                'class_submit' => 'wpmm-button'
-            ));
-            ?>
+            <form method="post" id="wpmm-login-form">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="log" required>
+
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="pwd" required>
+
+                <button type="submit" id="wpmm-login-submit" class="wpmm-button">Login</button>
+            </form>
+            <div id="wpmm-error-message" class="wpmm-error" style="display: none;"></div>
         </div>
         <?php
         return ob_get_clean();
     }
 }
 add_shortcode('wpmm_login_form', 'wpmm_login_form');
+
 
