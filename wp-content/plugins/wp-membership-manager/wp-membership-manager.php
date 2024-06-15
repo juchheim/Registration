@@ -29,9 +29,8 @@ function wpmm_enqueue_scripts() {
 }
 add_action('wp_enqueue_scripts', 'wpmm_enqueue_scripts');
 
-// Custom redirect after login
+// Redirect after login based on user role
 function wpmm_login_redirect($redirect_to, $request, $user) {
-    // Check if the user is a valid WP_User and not an error
     if (isset($user->roles) && is_array($user->roles)) {
         // Redirect to the homepage after login
         return home_url();
@@ -40,6 +39,17 @@ function wpmm_login_redirect($redirect_to, $request, $user) {
     return $redirect_to;
 }
 add_filter('login_redirect', 'wpmm_login_redirect', 10, 3);
+
+// Handle login errors
+function wpmm_login_failed() {
+    $referrer = wp_get_referer();
+    if ($referrer && !strstr($referrer, 'wp-login') && !strstr($referrer, 'wp-admin')) {
+        wp_redirect($referrer . '?login=failed');
+        exit;
+    }
+}
+add_action('wp_login_failed', 'wpmm_login_failed');
+
 
 // Add your Stripe API keys
 define('STRIPE_API_KEY', 'sk_test_51PRj4aHrZfxkHCcnjYNK7r3Ev1e1sIlU4R3itbutVSG1fJKAzfEOehjvFZz7B9A8v5Hu0fF0Dh9sv5ZYmbrd9swh00VLTD1J2Q');

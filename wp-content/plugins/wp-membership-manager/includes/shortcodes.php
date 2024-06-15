@@ -94,24 +94,31 @@ function wpmm_login_form() {
         wp_redirect(home_url()); // Redirect to the homepage or any accessible page after login
         exit;
     } else {
+        $login_errors = isset($_GET['login']) ? $_GET['login'] : '';
         ob_start();
         ?>
         <div class="wpmm-login-form">
-            <form method="post" id="wpmm-login-form">
+            <h2>Login</h2>
+            <?php if ($login_errors == 'failed') : ?>
+                <div class="wpmm-error">
+                    <p>Invalid username or password. Please try again.</p>
+                </div>
+            <?php endif; ?>
+            <form method="post" action="<?php echo wp_login_url(); ?>">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="log" required>
-
+                
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="pwd" required>
-
+                
+                <input type="hidden" name="redirect_to" value="<?php echo home_url(); ?>">
+                
                 <button type="submit" id="wpmm-login-submit" class="wpmm-button">Login</button>
             </form>
-            <div id="wpmm-error-message" class="wpmm-error" style="display: none;"></div>
         </div>
         <?php
         return ob_get_clean();
     }
 }
 add_shortcode('wpmm_login_form', 'wpmm_login_form');
-
 
