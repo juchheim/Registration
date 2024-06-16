@@ -109,9 +109,9 @@ function wpmm_handle_stripe_webhook(WP_REST_Request $request) {
 }
 
 add_action('rest_api_init', function () {
-    error_log("Registering REST API route"); // Debugging line
     register_rest_route('wpmm/v1', '/stripe-webhook', array(
         'methods' => 'POST',
         'callback' => 'wpmm_handle_stripe_webhook',
+        'permission_callback' => '__return_true',
     ));
 });
