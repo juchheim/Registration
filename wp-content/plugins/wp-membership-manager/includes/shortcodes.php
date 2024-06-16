@@ -2,34 +2,37 @@
 
 // Registration Form Shortcode
 function wpmm_registration_form() {
-    // Replace 'your-stripe-publishable-key' with your actual Stripe publishable key
     $stripe_publishable_key = 'pk_test_51PRj4aHrZfxkHCcnhKjEkTIKhaASMGZaE6iDQfHE4MaxcC1xvqfafGBBXEFYOO1AC0In0YwGJbDa4yFeM3DckrGQ00onFkBwh5';
     ob_start();
     ?>
-    <div class="wpmm-registration-form">
-        <form method="post" id="wpmm-registration-form">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-            
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-            
-            <label for="membership_plan">Membership Plan:</label>
-            <select id="membership_plan" name="membership_plan" required>
-                <?php
-                $plans = get_posts(array('post_type' => 'membership_plan', 'posts_per_page' => -1));
-                foreach ($plans as $plan) {
-                    echo '<option value="' . esc_attr($plan->ID) . '">' . esc_html($plan->post_title) . '</option>';
-                }
-                ?>
-            </select>
-            <button type="button" id="stripe-pay-button" class="wpmm-button">Pay with Stripe</button>
-        </form>
-        <div id="wpmm-error-message" class="wpmm-error" style="display: none;"></div>
-    </div>
+    <form method="post" id="wpmm-registration-form" class="wpmm-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        
+        <label for="membership_plan">Membership Plan:</label>
+        <select id="membership_plan" name="membership_plan" required>
+            <?php
+            $plans = get_posts(array('post_type' => 'membership_plan', 'posts_per_page' => -1));
+            foreach ($plans as $plan) {
+                echo '<option value="' . esc_attr($plan->ID) . '">' . esc_html($plan->post_title) . '</option>';
+            }
+            ?>
+        </select>
+
+        <label for="payment_type">Payment Type:</label>
+        <select id="payment_type" name="payment_type" required>
+            <option value="single">Single Payment</option>
+            <option value="recurring">Recurring Payment</option>
+        </select>
+
+        <button type="button" id="stripe-pay-button" class="wpmm-button">Pay with Stripe</button>
+    </form>
 
     <script>
         document.getElementById('stripe-pay-button').addEventListener('click', function() {
@@ -45,9 +48,7 @@ function wpmm_registration_form() {
                         var stripe = Stripe('<?php echo $stripe_publishable_key; ?>');
                         stripe.redirectToCheckout({ sessionId: response.sessionId });
                     } else {
-                        var errorMessage = document.getElementById('wpmm-error-message');
-                        errorMessage.style.display = 'block';
-                        errorMessage.textContent = response.error || 'Payment failed. Please try again.';
+                        alert('Payment failed. Please try again.');
                     }
                 }
             };
@@ -61,11 +62,12 @@ add_shortcode('wpmm_registration_form', 'wpmm_registration_form');
 
 // Handle registration form submission
 function wpmm_handle_registration_form_submission() {
-    if (isset($_POST['username'], $_POST['email'], $_POST['password'], $_POST['membership_plan'])) {
+    if (isset($_POST['username'], $_POST['email'], $_POST['password'], $_POST['membership_plan'], $_POST['payment_type'])) {
         $username = sanitize_text_field($_POST['username']);
         $email = sanitize_email($_POST['email']);
         $password = sanitize_text_field($_POST['password']);
         $membership_plan = intval($_POST['membership_plan']);
+        $payment_type = sanitize_text_field($_POST['payment_type']);
 
         // Ensure username and email are unique
         if (username_exists($username) || email_exists($email)) {
@@ -81,8 +83,11 @@ function wpmm_handle_registration_form_submission() {
             'membership_plan' => $membership_plan
         );
 
-        // Process Stripe payment
-        wpmm_process_stripe_payment($custom_data);
+        if ($payment_type === 'recurring') {
+            wpmm_process_stripe_recurring_payment($custom_data);
+        } else {
+            wpmm_process_stripe_payment($custom_data);
+        }
     }
 }
 add_action('wp_ajax_nopriv_wpmm_handle_registration_form_submission', 'wpmm_handle_registration_form_submission');
@@ -97,7 +102,7 @@ function wpmm_login_form() {
         $login_errors = isset($_GET['login']) ? $_GET['login'] : '';
         ob_start();
         ?>
-        <div class="wpmm-login-form">
+        <div class="wpmm-login-form wpmm-form">
             <?php if ($login_errors == 'failed') : ?>
                 <div class="wpmm-error">
                     <p>Invalid username or password. Please try again.</p>
@@ -121,5 +126,3 @@ function wpmm_login_form() {
     }
 }
 add_shortcode('wpmm_login_form', 'wpmm_login_form');
-
-

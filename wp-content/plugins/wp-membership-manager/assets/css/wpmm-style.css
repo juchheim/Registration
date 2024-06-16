@@ -1,74 +1,64 @@
-/* wpmm-style.css */
-
-/* Basic styling for the forms */
-.wpmm-registration-form, .wpmm-login-form {
+/* General form styles */
+.wpmm-form {
     max-width: 400px;
     margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
 }
 
-.wpmm-registration-form h2, .wpmm-login-form h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
-}
-
-.wpmm-registration-form label, .wpmm-login-form label {
+.wpmm-form label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     font-weight: bold;
-    color: #333;
 }
 
-.wpmm-registration-form input[type="text"], .wpmm-registration-form input[type="email"], .wpmm-registration-form input[type="password"],
-.wpmm-login-form input[type="text"], .wpmm-login-form input[type="password"] {
+.wpmm-form input[type="text"],
+.wpmm-form input[type="email"],
+.wpmm-form input[type="password"],
+.wpmm-form select,
+.wpmm-form button.wpmm-button {
     width: 100%;
-    padding: 10px;
+    padding: 10px 0 10px 0;
     margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-.wpmm-registration-form select, .wpmm-login-form select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-.wpmm-button {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    background-color: #0073aa;
+.wpmm-form button.wpmm-button {
+    background: #0073aa;
     color: #fff;
     border: none;
-    border-radius: 5px;
-    font-size: 16px;
     cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    box-sizing: border-box;
-    transition: background-color 0.3s ease;
 }
 
-.wpmm-button:hover {
-    background-color: #005077;
+.wpmm-form button.wpmm-button:hover {
+    background: #005a87;
 }
 
-.wpmm-registration-form .wpmm-error, .wpmm-login-form .wpmm-error {
-    color: #d00;
-    background-color: #fee;
+.wpmm-form .wpmm-error {
+    background: #f8d7da;
+    color: #721c24;
     padding: 10px;
-    border: 1px solid #d00;
-    border-radius: 5px;
     margin-bottom: 15px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    text-align: center;
+}
+
+/* Stripe payment button */
+#stripe-pay-button {
+    background: #6772e5;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+#stripe-pay-button:hover {
+    background: #5469d4;
 }
