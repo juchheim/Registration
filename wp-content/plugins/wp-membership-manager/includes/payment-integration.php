@@ -98,6 +98,10 @@ function wpmm_handle_stripe_webhook(WP_REST_Request $request) {
         $user->set_role($role);
 
         file_put_contents($log_file_path, "User created with ID: $user_id and assigned role: $role\n", FILE_APPEND);
+        
+        // Redirect to login page
+        wp_redirect(home_url('/login'));
+        exit;
     }
 
     http_response_code(200);
