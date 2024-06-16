@@ -205,17 +205,3 @@ endif;
 
 add_action( 'init', 'twentytwentyfour_pattern_categories' );
 
-
-function exclude_thank_you_page_from_menu($items, $menu, $args) {
-    // Change the ID to the ID of your "Thank You" page
-    $exclude_page_id = 34;
-
-    foreach ($items as $key => $item) {
-        if ($item->object_id == $exclude_page_id) {
-            unset($items[$key]);
-        }
-    }
-
-    return $items;
-}
-add_filter('wp_get_nav_menu_items', 'exclude_thank_you_page_from_menu', 10, 3);
