@@ -98,20 +98,22 @@ function wpmm_login_form() {
         ob_start();
         ?>
         <div class="wpmm-login-form">
+            <h2>Login</h2>
             <?php if ($login_errors == 'failed') : ?>
                 <div class="wpmm-error">
                     <p>Invalid username or password. Please try again.</p>
                 </div>
             <?php endif; ?>
-            <form method="post" action="<?php echo wp_login_url(); ?>">
+            <form method="post" action="<?php echo esc_url(wp_login_url()); ?>">
+                <?php wp_nonce_field('wpmm_login_action', 'wpmm_login_nonce'); ?>
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="log" required>
-                
+
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="pwd" required>
-                
-                <input type="hidden" name="redirect_to" value="<?php echo home_url(); ?>">
-                
+
+                <input type="hidden" name="redirect_to" value="<?php echo esc_url(home_url()); ?>">
+
                 <button type="submit" id="wpmm-login-submit" class="wpmm-button">Login</button>
             </form>
         </div>
@@ -120,4 +122,5 @@ function wpmm_login_form() {
     }
 }
 add_shortcode('wpmm_login_form', 'wpmm_login_form');
+
 
