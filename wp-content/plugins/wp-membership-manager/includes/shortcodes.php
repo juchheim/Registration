@@ -98,7 +98,6 @@ function wpmm_login_form() {
         ob_start();
         ?>
         <div class="wpmm-login-form">
-            <h2>This is the new code.</h2>
             <?php if ($login_errors == 'failed') : ?>
                 <div class="wpmm-error">
                     <p>Invalid username or password. Please try again.</p>
