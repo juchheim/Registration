@@ -55,25 +55,6 @@ add_action('wp_login_failed', 'wpmm_login_failed');
 define('STRIPE_API_KEY', 'sk_test_51PRj4aHrZfxkHCcnjYNK7r3Ev1e1sIlU4R3itbutVSG1fJKAzfEOehjvFZz7B9A8v5Hu0fF0Dh9sv5ZYmbrd9swh00VLTD1J2Q');
 define('STRIPE_PUBLISHABLE_KEY', 'pk_test_51PRj4aHrZfxkHCcnhKjEkTIKhaASMGZaE6iDQfHE4MaxcC1xvqfafGBBXEFYOO1AC0In0YwGJbDa4yFeM3DckrGQ00onFkBwh5');
 
-// Redirect after login based on user role
-function wpmm_login_redirect($redirect_to, $request, $user) {
-    if (isset($user->roles) && is_array($user->roles)) {
-        return home_url(); // Redirect to the homepage after login
-    }
-
-    return $redirect_to;
-}
-add_filter('login_redirect', 'wpmm_login_redirect', 10, 3);
-
-// Handle login errors
-function wpmm_login_failed() {
-    $referrer = wp_get_referer();
-    if ($referrer && !strstr($referrer, 'wp-login') && !strstr($referrer, 'wp-admin')) {
-        wp_redirect($referrer . '?login=failed');
-        exit;
-    }
-}
-add_action('wp_login_failed', 'wpmm_login_failed');
 
 // Handle login nonce validation
 function wpmm_validate_login_nonce($user, $username, $password) {
